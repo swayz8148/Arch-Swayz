@@ -96,7 +96,7 @@ arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 clear
 arch-chroot /mnt systemctl enable dhcpcd
 arch-chroot /mnt systemctl enable NetworkManager
-
+sleep 10s
 echo Install has finished
 echo please reboot your pc and log into your new arch build ":)"
 date +"%H:%M:%S"
