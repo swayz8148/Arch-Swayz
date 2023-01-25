@@ -49,16 +49,26 @@ arch-chroot /mnt useradd -m $username
 arch-chroot /mnt passwd $username
 arch-chroot /mnt usermod -aG wheel,storage,power $username
 
-arch-chroot /mnt EDITOR=nano visudo
+arch-chroot /mnt EDITOR=nano
+arch-chroot /mnt nano visudo
 
 arch-chroot /mnt nano /etc/locale.gen
 arch-chroot /mnt locale-gen
-arch-chroot /mnt echo LANG=en_GB.UTF-8 > /etc/locale.conf
-arch-chroot /mnt export LANG=_GB.UTF-8
 
-arch-chroot /mnt echo arch-swayz > /etc/hostname
+echo please enter the language you uncommitted E.G en_GB.UTF-8
+read lang
 
-arch-chroot /mnt nano /etc/hosts
+arch-chroot /mnt echo 'LANG='$lang > /etc/locale.conf
+arch-chroot /mnt export LANG=$lang
+
+echo Enter the host name you would like to use
+read hotname
+
+arch-chroot /mnt echo $hostname >> /etc/hostname
+
+arch-chroot /mnt echo '127.0.0.1    localhost 
+::1          localhost 
+127.0.1.1    swayz.localdomain   localhost' > /etc/hosts
 
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/london /etc/localtime
 
@@ -69,8 +79,8 @@ arch-chroot /mnt nano /etc/default/grub
 arch-chroot /mnt pacman -S os-prober
 arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
-arch-chroot /mnt systemctl enable dhcpcd.service
-arch-chroot /mnt systemctl enable NetworkManager.service
+arch-chroot /mnt sudo systemctl enable dhcpcd
+arch-chroot /mnt sudo systemctl enable NetworkManager
 exit
 
 echo Install has finished
