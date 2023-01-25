@@ -76,7 +76,7 @@ arch-chroot /mnt export LANG=$lang
 
 
 echo Enter the host name you would like to use
-read hotname
+read hostname
 
 arch-chroot /mnt echo $hostname >> /etc/hostname
 
