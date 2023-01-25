@@ -58,6 +58,7 @@ arch-chroot /mnt locale-gen
 while true; do
     echo please enter the language you uncommitted E.G en_GB.UTF-8
     read lang
+    echo is the language right $lang
     read -p "Do you want to proceed? (y/n) " yn
     
     case $yn in
