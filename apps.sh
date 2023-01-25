@@ -1,5 +1,6 @@
 setxkbmap gb
-sudo pacman -S pavucontrol thunar ranger code discord spotify-launcher unzip gedit bitwarden nvidia nvidia-utils nvidia-settings cmatrix zsh
+sudo pacman -S pavucontrol thunar ranger code discord spotify-launcher unzip gedit bitwarden nvidia nvidia-utils nvidia-settings cmatrix zsh ntfs-3g pulseaudio-equalizer-ladspa
+echo "waiting 5 seconds..."
 sleep 5s
 mkdir ~/Desktop/Stuff
 cd ~/Desktop/Stuff
@@ -8,3 +9,4 @@ git clone https://aur.archlinux.org/nodejs-nativefier.git
 git clone https://aur.archlinux.org/whatsapp-nativefier.git
 git clone https://aur.archlinux.org/nitch.git
 git clone https://aur.archlinux.org/pipes.sh.git
+git clone https://aur.archlinux.org/netflix-nativefier.git
