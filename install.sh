@@ -6,6 +6,8 @@ timedatectl set-ntp true
 
 cfdisk /dev/sda
 
+lsblk
+
 mkfs.ext4 /dev/sda5
 mkfs.ext4 /dev/sda6
 mkswap /dev/sda7
@@ -26,9 +28,28 @@ genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt
 passwd
 
-useradd -m swayz
-passwd swayz
-usermod -aG wheel,storage,power swayz
+while true; do
+
+echo input your username
+read username
+echo "Is this correct" $username
+
+read -p "Do you want to proceed? (y/n) " yn
+
+case $yn in 
+	[yY] ) echo ok, we will proceed;
+		break;;
+	[nN] ) echo redo your username please;
+        clear;
+		continue;;
+	* ) echo invalid response;;
+esac
+
+done
+
+useradd -m $username
+passwd $username
+usermod -aG wheel,storage,power $username
 
 EDITOR=nano visudo
 
@@ -55,4 +76,5 @@ systemctl enable NetworkManager.service
 exit
 
 echo Install has finished
+echo please reboot your pc and log into your new arch build ":)"
 date +"%H:%M:%S"
