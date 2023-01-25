@@ -93,9 +93,9 @@ arch-chroot /mnt nano /etc/default/grub
 arch-chroot /mnt pacman -S os-prober
 arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
-arch-chroot /mnt sudo systemctl enable dhcpcd
-arch-chroot /mnt sudo systemctl enable NetworkManager
-exit
+clear
+arch-chroot /mnt systemctl enable dhcpcd
+arch-chroot /mnt systemctl enable NetworkManager
 
 echo Install has finished
 echo please reboot your pc and log into your new arch build ":)"
