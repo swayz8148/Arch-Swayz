@@ -20,7 +20,7 @@ pacman -Sy
 pacman -S pacman-contrib
 rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
 
-pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode sudo nano vim git neofetch networkmanager dhcpcd pulseaudio
+pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode sudo nano git networkmanager dhcpcd pulseaudio
 
 genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt passwd
