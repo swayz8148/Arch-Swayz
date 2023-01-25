@@ -1,6 +1,5 @@
 date +"%H:%M:%S"
 
-setfont ter-132n
 timedatectl set-timezone Europe/London
 timedatectl set-ntp true
 
@@ -27,22 +26,23 @@ genfstab -U /mnt > /mnt/etc/fstab
 arch-chroot /mnt passwd
 
 while true; do
-
-echo input your username
-read username
-echo "Is this correct" $username
-
-read -p "Do you want to proceed? (y/n) " yn
-
-case $yn in 
-	[yY] ) echo ok, we will proceed;
-		break;;
-	[nN] ) echo redo your username please;
-        clear;
-		continue;;
-	* ) echo invalid response;;
-esac
-
+    
+    echo input your username
+    read username
+    echo "Is this correct" $username
+    
+    read -p "Do you want to proceed? (y/n) " yn
+    
+    case $yn in
+        [yY] ) echo ok, we will proceed;
+		clear;
+        break;;
+        [nN] ) echo redo your username please;
+            clear;
+        continue;;
+        * ) echo invalid response;;
+    esac
+    
 done
 
 arch-chroot /mnt useradd -m $username
@@ -55,19 +55,32 @@ arch-chroot /mnt nano visudo
 arch-chroot /mnt nano /etc/locale.gen
 arch-chroot /mnt locale-gen
 
-echo please enter the language you uncommitted E.G en_GB.UTF-8
-read lang
-
+while true; do
+    echo please enter the language you uncommitted E.G en_GB.UTF-8
+    read lang
+    read -p "Do you want to proceed? (y/n) " yn
+    
+    case $yn in
+        [yY] ) echo ok, we will proceed;
+		clear;
+        break;;
+        [nN] ) echo redo your language please;
+            clear;
+        continue;;
+        * ) echo invalid response;;
+    esac
+done
 arch-chroot /mnt echo 'LANG='$lang > /etc/locale.conf
 arch-chroot /mnt export LANG=$lang
+
 
 echo Enter the host name you would like to use
 read hotname
 
 arch-chroot /mnt echo $hostname >> /etc/hostname
 
-arch-chroot /mnt echo '127.0.0.1    localhost 
-::1          localhost 
+arch-chroot /mnt echo '127.0.0.1    localhost
+::1          localhost
 127.0.1.1    swayz.localdomain   localhost' > /etc/hosts
 
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/london /etc/localtime
