@@ -1,3 +1,4 @@
+setxkbmap gb
 sudo pacman -S pavucontrol thunar ranger code discord spotify-launcher unzip gedit bitwarden nvidia nvidia-utils nvidia-settings cmatrix pipes.sh
 sleep 5s
 mkdir ~/Desktop/Stuff
