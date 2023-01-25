@@ -1,0 +1,6 @@
+sudo pacman -S nemo code discord spotify-launcher 
+mkdir ~/Desktop/Stuff
+cd ~/Desktop/Stuff
+git clone https://aur.archlinux.org/brave-bin.git
+git clone https://aur.archlinux.org/nodejs-nativefier.git
+git clone https://aur.archlinux.org/whatsapp-nativefier.git
