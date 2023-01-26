@@ -1,3 +1,4 @@
+#!/bin/sh
 setxkbmap gb
 sudo pacman -S pavucontrol thunar ranger code discord spotify-launcher unzip gedit bitwarden nvidia nvidia-utils nvidia-settings cmatrix zsh ntfs-3g pulseaudio-equalizer-ladspa xorg-xsetroot
 echo "waiting 5 seconds..."

@@ -1,51 +1,57 @@
-date +"%H:%M:%S"
-
+#!/bin/sh
 timedatectl set-timezone Europe/London
 timedatectl set-ntp true
 
 cfdisk /dev/sda
 
-mkfs.ext4 /dev/sda5
-mkfs.ext4 /dev/sda6
-mkswap /dev/sda7
-swapon /dev/sda7
-mount /dev/sda5 /mnt
+read -r drive1
+read -r drive2
+read -r drive3
+
+mkfs.ext4 /dev/sda"$drive1"
+mkfs.ext4 /dev/sda"$drive2"
+mkswap /dev/sda"$drive3"
+swapon /dev/sda"$drive3"
+mount /dev/sda"$drive1" /mnt
 mkdir /mnt/home
-mount /dev/sda6 /mnt/home
+mount /dev/sda"$drive2" /mnt/home
 
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 pacman -Sy
 pacman -S pacman-contrib
-rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
+rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak >/etc/pacman.d/mirrorlist
 
 pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode sudo nano git networkmanager dhcpcd pulseaudio
 
-genfstab -U /mnt > /mnt/etc/fstab
+genfstab -U /mnt >/mnt/etc/fstab
 arch-chroot /mnt passwd
 
 while true; do
-    
-    echo input your username
-    read username
-    echo "Is this correct" $username
-    
-    read -p "Do you want to proceed? (y/n) " yn
-    
-    case $yn in
-        [yY] ) echo ok, we will proceed;
-		clear;
-        break;;
-        [nN] ) echo redo your username please;
-            clear;
-        continue;;
-        * ) echo invalid response;;
-    esac
-    
-done
 
-arch-chroot /mnt useradd -m $username
-arch-chroot /mnt passwd $username
-arch-chroot /mnt usermod -aG wheel,storage,power $username
+    echo input your username
+    read -r username
+    echo "Is this correct $username"
+
+    read -p "Do you want to proceed? (y/n) " yn
+
+    case $yn in
+    [yY])
+        echo ok, we will proceed
+        clear
+        break
+        ;;
+    [nN])
+        echo redo your username please
+        clear
+        continue
+        ;;
+    *) echo invalid response ;;
+    esac
+
+done
+arch-chroot /mnt useradd -m "$username"
+arch-chroot /mnt passwd "$username"
+arch-chroot /mnt usermod -aG wheel,storage,power "$username"
 
 arch-chroot /mnt EDITOR=nano
 arch-chroot /mnt nano visudo
@@ -55,32 +61,35 @@ arch-chroot /mnt locale-gen
 
 while true; do
     echo please enter the language you uncommitted E.G en_GB.UTF-8
-    read lang
-    echo is the language right $lang
-    read -p "Do you want to proceed? (y/n) " yn
-    
-    case $yn in
-        [yY] ) echo ok, we will proceed;
-		clear;
-        break;;
-        [nN] ) echo redo your language please;
-            clear;
-        continue;;
-        * ) echo invalid response;;
+    read -r lang
+    echo is the language right "$lang"
+    read -p "Do you want to proceed? (Y/n) " Yn
+
+    case $Yn in
+    [yY])
+        echo ok, we will proceed
+        clear
+        break
+        ;;
+    [nN])
+        echo redo your language please
+        clear
+        continue
+        ;;
+    *) echo invalid response ;;
     esac
 done
-arch-chroot /mnt echo 'LANG='$lang > /etc/locale.conf
-arch-chroot /mnt export LANG=$lang
-
+arch-chroot /mnt echo "LANG=$lang" >/etc/locale.conf
+arch-chroot /mnt export "LANG=$lang"
 
 echo Enter the host name you would like to use
-read hostname
+read -r hostname
 
-arch-chroot /mnt echo $hostname >> /etc/hostname
+arch-chroot /mnt echo "$hostname" >>/etc/hostname
 
 arch-chroot /mnt echo '127.0.0.1    localhost
 ::1          localhost
-127.0.1.1    swayz.localdomain   localhost' > /etc/hosts
+127.0.1.1    swayz.localdomain   localhost' >/etc/hosts
 
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/london /etc/localtime
 
