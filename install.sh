@@ -27,11 +27,9 @@ genfstab -U /mnt >/mnt/etc/fstab
 arch-chroot /mnt passwd
 
 while true; do
-
     echo input your username
     read -r username
     echo "Is this correct $username"
-
     read -p "Do you want to proceed? (y/n) " yn
 
     case $yn in
@@ -47,7 +45,6 @@ while true; do
         ;;
     *) echo invalid response ;;
     esac
-
 done
 arch-chroot /mnt useradd -m "$username"
 arch-chroot /mnt passwd "$username"
