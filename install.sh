@@ -5,15 +5,16 @@ timedatectl set-ntp true
 cfdisk /dev/sda
 clear
 
+sleep 2s
 lsblk
-echo "__________________________________________________________________________________________________"
+
+echo "--------------------------------------------------------------------------------------------------"
 echo "please pick the parttion you want to be the root"
 read -r drive1
 echo "please pick the parttion you want to be the home"
 read -r drive2
 echo "please pick the parttion you want to be the swap"
 read -r drive3
-echo "__________________________________________________________________________________________________"
 
 mkfs.ext4 /dev/sda"$drive1"
 mkfs.ext4 /dev/sda"$drive2"
@@ -24,6 +25,7 @@ mkdir /mnt/home
 mount /dev/sda"$drive2" /mnt/home
 
 clear
+sleep 2s
 
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
 pacman -Sy
@@ -36,6 +38,7 @@ genfstab -U /mnt >/mnt/etc/fstab
 arch-chroot /mnt passwd
 
 clear
+sleep 2s
 
 while true; do
     echo input your username
@@ -59,6 +62,7 @@ while true; do
 done
 
 clear
+sleep 2s
 
 arch-chroot /mnt useradd -m "$username"
 arch-chroot /mnt passwd "$username"
@@ -95,6 +99,7 @@ arch-chroot /mnt echo "LANG=$lang" > /etc/locale.conf
 arch-chroot /mnt export "LANG=$lang"
 
 clear
+sleep 2s
 
 echo Enter the host name you would like to use
 read -r hostname
@@ -108,6 +113,7 @@ arch-chroot /mnt echo '127.0.0.1    localhost
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/london /etc/localtime
 
 clear
+sleep 2s
 
 arch-chroot /mnt mkdir /boot/efi
 arch-chroot /mnt mount /dev/sda1 /boot/efi/
