@@ -3,12 +3,14 @@ timedatectl set-timezone Europe/London
 timedatectl set-ntp true
 
 cfdisk /dev/sda
-clear
 
+clear
 sleep 2s
-lsblk
 
 echo "--------------------------------------------------------------------------------------------------"
+lsblk
+echo "--------------------------------------------------------------------------------------------------"
+
 echo "please pick the parttion you want to be the root"
 read -r drive1
 echo "please pick the parttion you want to be the home"
@@ -48,12 +50,10 @@ while true; do
 
     case $yn in
     [yY])
-        echo ok, we will proceed
         clear
         break
         ;;
     [nN])
-        echo redo your username please
         clear
         continue
         ;;
@@ -68,7 +68,7 @@ arch-chroot /mnt useradd -m "$username"
 arch-chroot /mnt passwd "$username"
 arch-chroot /mnt usermod -aG wheel,storage,power "$username"
 
-arch-chroot /mnt EDITOR=nano visudo
+arch-chroot /mnt sudo EDITOR=nano visudo
 clear
 
 arch-chroot /mnt nano /etc/locale.gen
@@ -82,12 +82,10 @@ while true; do
 
     case $Yn in
     [yY])
-        echo ok, we will proceed
         clear
         break
         ;;
     [nN])
-        echo redo your language please
         clear
         continue
         ;;
@@ -95,20 +93,38 @@ while true; do
     esac
 done
 
-arch-chroot /mnt echo "LANG=$lang" > /etc/locale.conf
-arch-chroot /mnt export "LANG=$lang"
+arch-chroot /mnt echo "LANG="$lang > /etc/locale.conf
+arch-chroot /mnt export "LANG="$lang
 
 clear
 sleep 2s
 
-echo Enter the host name you would like to use
-read -r hostname
+
+
+while true; do
+    echo Enter the host name you would like to use
+    read -r hostname
+    echo is the hostname right "$hostname"
+    read -p "Do you want to proceed? (Y/n) " Yn
+
+    case $Yn in
+    [yY])
+        clear
+        break
+        ;;
+    [nN])
+        clear
+        continue
+        ;;
+    *) echo invalid response ;;
+    esac
+done
 
 arch-chroot /mnt echo "$hostname" > /etc/hostname
 
 arch-chroot /mnt echo '127.0.0.1    localhost
 ::1          localhost
-127.0.1.1    swayz.localdomain   localhost' >/etc/hosts
+127.0.1.1    '$hostname'.localdomain   localhost' >/etc/hosts
 
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/london /etc/localtime
 
