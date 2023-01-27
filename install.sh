@@ -34,7 +34,25 @@ pacman -Sy
 pacman -S pacman-contrib
 rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak >/etc/pacman.d/mirrorlist
 
-pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode sudo nano git networkmanager dhcpcd pulseaudio
+while true; do
+    echo "Do you want to download my base packages with linux's base.
+    all the packages - (nano git networkmanager dhcpcd pulseaudio)"
+    read -p "Do you want to proceed? (y/n) " yn
+
+    case $yn in
+    [yY])
+        pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode sudo nano git networkmanager dhcpcd pulseaudio
+        break
+        clear
+        ;;
+    [nN])
+        pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode
+        break
+        clear
+        ;;
+    *) echo invalid response ;;
+    esac
+done
 
 genfstab -U /mnt >/mnt/etc/fstab
 arch-chroot /mnt passwd
