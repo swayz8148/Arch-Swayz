@@ -29,10 +29,24 @@ mount /dev/sda"$drive2" /mnt/home
 clear
 sleep 2s
 
-cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-pacman -Sy
-pacman -S pacman-contrib
-rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak >/etc/pacman.d/mirrorlist
+while true; do 
+    echo "Do you want to use the rank mirrors command to get the fastest mirrors"
+    read -p "Do you want to proceed? (y/n) " yn
+
+    case $yn in 
+    [yY])
+    cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+    pacman -Sy
+    pacman -S pacman-contrib
+    rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak >/etc/pacman.d/mirrorlist
+    break
+    ;;
+    [nN])
+    break
+    ;;
+    *) echo invalid response ;;
+    esac
+done
 
 while true; do
     echo "Do you want to download my base packages with linux's base.
