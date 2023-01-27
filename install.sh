@@ -36,8 +36,8 @@ rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak >/etc/pacman.d/mirrorlist
 
 while true; do
     echo "Do you want to download my base packages with linux's base.
-    all the packages - (nano git networkmanager dhcpcd pulseaudio)"
-    read -p "Do you want to proceed? (y/n) " yn
+    all the packages - (nano networkmanager dhcpcd pulseaudio)"
+    read -p "Do you want to use the packages? (y/n) " yn
 
     case $yn in
     [yY])
