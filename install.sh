@@ -110,9 +110,9 @@ while true; do
     echo please enter the language you uncommitted E.G en_GB.UTF-8
     read -r lang
     echo is the language right "$lang"
-    read -p "Do you want to proceed? (Y/n) " Yn
+    read -p "Do you want to proceed? (y/n) " yn
 
-    case $Yn in
+    case $yn in
     [yY])
         clear
         break
@@ -137,9 +137,9 @@ while true; do
     echo Enter the host name you would like to use
     read -r hostname
     echo is the hostname right "$hostname"
-    read -p "Do you want to proceed? (Y/n) " Yn
+    read -p "Do you want to proceed? (y/n) " yn
 
-    case $Yn in
+    case $yn in
     [yY])
         clear
         break
@@ -154,9 +154,9 @@ done
 
 arch-chroot /mnt echo "$hostname" > /etc/hostname
 
-arch-chroot /mnt echo '127.0.0.1    localhost
-::1          localhost
-127.0.1.1    '$hostname'.localdomain   localhost' >/etc/hosts
+arch-chroot /mnt echo "127.0.0.1    localhost
+::1           localhost
+127.0.1.1    "$hostname".localdomain   localhost" > /etc/hosts
 
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/london /etc/localtime
 
