@@ -48,25 +48,7 @@ while true; do
     esac
 done
 
-while true; do
-    echo "Do you want to download my base packages with linux's base.
-    all the packages - (nano networkmanager dhcpcd pulseaudio)"
-    read -p "Do you want to use the packages? (y/n) " yn
-
-    case $yn in
-    [yY])
-        pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode sudo nano git networkmanager dhcpcd pulseaudio
-        break
-        clear
-        ;;
-    [nN])
-        pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode
-        break
-        clear
-        ;;
-    *) echo invalid response ;;
-    esac
-done
+pacstrap -i /mnt base base-devel linux intel-ucode sudo nano networkmanager dhcpcd pulseaudio
 
 genfstab -U /mnt >/mnt/etc/fstab
 arch-chroot /mnt passwd
