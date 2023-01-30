@@ -1,4 +1,23 @@
 #!/bin/sh
+red='\033[0;31m'
+green='\033[0;32m'
+clear='\033[0m'
+
+while true; do 
+    echo -e "${red}This script is still being tested by me.${clear}"
+    read -p "Do you want to proceed? (y/n) " yn
+
+    case $yn in 
+    [yY])
+    break
+    ;;
+    [nN])
+    exit
+    ;;
+    *) echo "${red} invalid response ${clear}" ;;
+    esac
+done
+
 timedatectl set-timezone Europe/London
 timedatectl set-ntp true
 
@@ -153,6 +172,5 @@ arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 clear
 arch-chroot /mnt systemctl enable dhcpcd
 arch-chroot /mnt systemctl enable NetworkManager
-echo "Install has finished"
-echo "please reboot your pc and log into your new arch build :)"
-date +"%H:%M:%S"
+echo -e "${green}Install has finished"
+echo -e "please reboot your pc and log into your new arch build ${clear}"
