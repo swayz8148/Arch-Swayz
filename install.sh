@@ -113,8 +113,6 @@ arch-chroot /mnt export "LANG="$lang
 clear
 sleep 2s
 
-
-
 while true; do
     echo Enter the host name you would like to use
     read -r hostname
