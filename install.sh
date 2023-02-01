@@ -17,7 +17,6 @@ while true; do
     *) echo "${red} invalid response ${clear}" ;;
     esac
 done
-
 timedatectl set-timezone Europe/London
 timedatectl set-ntp true
 
