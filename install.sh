@@ -31,8 +31,6 @@ done
 echo 'Welcome to my arch linux install'
 sleep 5s
 
-setfont ter-132n
-
 timedatectl set-timezone Europe/London
 timedatectl set-ntp true
 
@@ -53,9 +51,9 @@ mkswap /dev/sda"$swap"
 swapon /dev/sda"$swap"
 
 echo 'Mounting the parttions'
-mount /dev/sda"root" /mnt
+mount /dev/sda"$root" /mnt
 mkdir /mnt/home
-mount /dev/sda"home" /mnt/home
+mount /dev/sda"$home" /mnt/home
 
 while true; do
     read -p 'Would you like to setup the fasted mirrors? (y/n)' yn
@@ -77,7 +75,7 @@ while true; do
 done
 
 while true; do
-    read -p 'Would you like to install neofetch and vim with your base system (y/n' yn
+    read -p 'Would you like to install neofetch and vim with your base system (y/n)' yn
     
     case $yn in
         [yY])
