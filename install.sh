@@ -55,6 +55,8 @@ mount /dev/sda"$root" /mnt
 mkdir /mnt/home
 mount /dev/sda"$home" /mnt/home
 
+clear
+
 while true; do
     read -p 'Would you like to setup the fasted mirrors? (y/n)' yn
     
@@ -62,7 +64,7 @@ while true; do
         [yY])
             echo 'Setting up fastest mirrors'
             cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
-            pacman -S pacman-contrib
+            pacman -Syy pacman-contrib
             rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
             echo 'Fastest mirrors set'
             break
@@ -73,25 +75,24 @@ while true; do
         *) echo 'invalid respone please try again!' ;;
     esac
 done
-
+clear
 while true; do
     read -p 'Would you like to install neofetch and vim with your base system (y/n)' yn
     
     case $yn in
         [yY])
             echo 'Install base system with neofetch and vim'
-            pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode sudo nano vim neofetch networkmanager dhcpcd pulseaudio
+            pacstrap -i /mnt base base-devel intel-ucode sudo nano vim neofetch networkmanager dhcpcd pulseaudio
             break
         ;;
         [nN])
             echo 'Install base system without neofetch and vim'
-            pacstrap -i /mnt base base-devel linux linux-lts linux-headers linux-firmware intel-ucode sudo nano networkmanager dhcpcd pulseaudio
+            pacstrap -i /mnt base base-devel linux intel-ucode sudo nano networkmanager dhcpcd pulseaudio
             break
         ;;
         *) echo 'invalid respone please try again!' ;;
     esac
 done
-
 clear
 
 genfstab -U /mnt > /mnt/etc/fstab
@@ -111,6 +112,7 @@ while true; do
         ;;
         [nN])
             echo 'Please redo your username'
+            clear
             continue
         ;;
         *) echo 'invalid respone please try again!' ;;
@@ -138,6 +140,7 @@ while true; do
         ;;
         [nN])
             echo 'please redo your lang'
+            clear
             continue
         ;;
         *) echo 'invalid respone please try again!' ;;
@@ -180,6 +183,7 @@ while true; do
         ;;
         [nN])
             echo 'Please redo your timezone'
+            clear
             continue
         ;;
         *) echo 'invalid respone please try again!' ;;
@@ -195,7 +199,7 @@ arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --re
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg -home /boot/grub/grub.cfg
 arch-chroot /mnt systemctl enable dhcpcd
 arch-chroot /mnt systemctl enable NetworkManager
-
+clear
 echo 'You made it the install is now done have fun with archlinux'
 
 while true; do
