@@ -149,7 +149,7 @@ while true; do
     read -r hostname
     echo "$hostname"
     read -p 'Is your hostname right (y/n)' yn
-    case yn in
+    case $yn in
         [yY])
             arch-chroot /mnt echo "$hostname" > /etc/hostname
             break
