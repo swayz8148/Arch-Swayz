@@ -128,7 +128,7 @@ arch-chroot /mnt locale-gen
 while true; do
     echo 'Please enter the lang you use'
     read -r lang
-    echo lang
+    echo "$lang"
     read -p 'Is your lang right (y/n)' yn
     case $yn in
         [yY])
@@ -158,6 +158,7 @@ while true; do
             echo' please redo your hostname'
             continue
         ;;
+        *) echo 'invalid respone please try again!' ;;
     esac
 done
 
