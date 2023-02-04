@@ -115,7 +115,7 @@ done
 arch-chroot /mnt passwd "$username"
 arch-chroot /mnt usermod -aG wheel,storage,power "$username"
 
-arch-chroot /mnt EDITOR=nano visudo
+arch-chroot /mnt sudo nano visudo
 
 arch-chroot /mnt nano /etc/locale.gen
 arch-chroot /mnt locale-gen
