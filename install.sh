@@ -164,10 +164,9 @@ arch-chroot /mnt echo '127.0.0.1   localhost
 127.0.1.1   '"$hostname"'.localdomain localhost' > /etc/hosts
 
 while true; do
-    echo 'please enter your timezone example Europe/london'
+    echo 'please enter your timezone example Europe/London'
     read -r timezone
-    
-    echo $timezone
+    echo "$timezone"
     read -p 'Is your timezone right (y/n)' yn
     case $yn in
         [yY])
@@ -183,13 +182,26 @@ while true; do
     esac
 done
 
-arch-chroot /mnt mkdir /boot/efi
-arch-chroot /mnt mount /dev/sda1 /boot/efi/
-arch-chroot /mnt pacman -S grub efibootmgr dosfstools mtools
-arch-chroot /mnt nano /etc/default/grub
-arch-chroot /mnt pacman -S os-prober
-arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg -home /boot/grub/grub.cfg
+while true; do
+    
+    read -p 'Do you want to install grub (y/n)' yn
+    
+    case $yn in
+        [yY])
+            arch-chroot /mnt mkdir /boot/efi
+            arch-chroot /mnt mount /dev/sda1 /boot/efi/
+            arch-chroot /mnt pacman -S grub efibootmgr dosfstools mtools
+            arch-chroot /mnt nano /etc/default/grub
+            arch-chroot /mnt pacman -S os-prober
+            arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+            arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg -home /boot/grub/grub.cfg
+        ;;
+        [nN])
+            break
+        ;;
+        *) echo 'invalid respone please try again!' ;;
+    esac
+done
 arch-chroot /mnt systemctl enable dhcpcd
 arch-chroot /mnt systemctl enable NetworkManager
 clear
