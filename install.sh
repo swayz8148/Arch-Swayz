@@ -1,27 +1,18 @@
 #!/bin/sh
-red='\033[0;31m'
-green='\033[0;32m'
-blue='\033[0;34m'
-clear='\033[0m'
 
 while true; do
-    
-    echo -e "${red} "
+    clear
     read -p 'This will install a basic arch linux install do you want to continue(y/n)' yn
-    echo -e "${clear} "
     
     case $yn in
         [yY])
-            echo -e "${green} "
             echo 'Starting now...'
-            sleep 3s
+            sleep 2s
             break
         ;;
         [nN])
-            echo -e "${blue} "
             echo 'Stopping now...'
-            sleep 3s
-            echo -e "${clear} "
+            sleep 2s
             exit
         ;;
         *) echo 'invalid respone try again!' ;;
@@ -29,7 +20,8 @@ while true; do
 done
 
 echo 'Welcome to my arch linux install'
-sleep 5s
+sleep 3s
+clear
 
 timedatectl set-timezone Europe/London
 timedatectl set-ntp true
@@ -101,6 +93,7 @@ echo 'Setup your root password'
 arch-chroot /mnt passwd
 
 while true; do
+    echo 'please enter your username'
     read -r username
     echo "$username"
     read -p 'Is your username right (y/n)' yn
@@ -202,6 +195,8 @@ arch-chroot /mnt systemctl enable NetworkManager
 clear
 echo 'You made it the install is now done have fun with archlinux'
 
+curl -LO https://raw.githubusercontent.com/swayz8148/Arch-Swayz/main/apps.sh /mnt/home/"$username"/apps
+
 while true; do
     read -p 'would you like to unmount and reboot now? (y/n)' yn
     case $yn in
@@ -213,7 +208,7 @@ while true; do
             reboot
         ;;
         [nN])
-            echo -e 'Ok exiting the script${clear}'
+            echo 'Ok exiting the script'
             exit
         ;;
     esac
