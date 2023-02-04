@@ -158,7 +158,7 @@ while true; do
             break
         ;;
         [nN])
-            echo' please redo your hostname'
+            echo 'please redo your hostname'
             continue
         ;;
         *) echo 'invalid respone please try again!' ;;
