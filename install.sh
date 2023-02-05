@@ -1,40 +1,49 @@
 #!/bin/sh
-
 while true; do
-    clear
-    read -p 'This will install a basic arch linux install do you want to continue(y/n)' yn
+    read -p 'Welcome to my archlinux installer would you like to continue with the install' yn
     
     case $yn in
         [yY])
-            echo 'Starting now...'
-            sleep 2s
-            break
+            echo 'Starting now'
+            sleep 3s
+            clear
         ;;
         [nN])
-            echo 'Stopping now...'
-            sleep 2s
-            exit
+            echo 'Leaving now'
+            sleep 1s
+            clear
         ;;
-        *) echo 'invalid respone try again!' ;;
     esac
 done
 
-echo 'Welcome to my arch linux install'
-sleep 3s
-clear
+echo '
+.--.
+|__| .---------.
+|=.| |.-------.|
+|--| || Swayz ||
+|  | |'-------'|
+|__|~')_______('
+'
 
-timedatectl set-timezone Europe/London
-timedatectl set-ntp true
+echo 'This install is for windows dual boot if you are not dual booting this may not work'
 
-loadkeys uk
+echo 'Please enter your keymap if you dont know this then please go find it (can be found by using the arch wiki)'
+read -r keymap
 
-cfdisk
+echo 'Please enter your name for the install'
+read -r username
+echo 'Please enter your hostname'
+read -r hostname
 
-echo 'please pick the parttion you want to be the root please only include the parttion number'
+loadkeys "$keymap"
+
+cfdisk && echo 'please setup your partitions'
+
+echo 'please pick the partition you want to be the root please only include the partition number'
 read -r root
-echo 'please pick the parttion you want to be the home please only include the parttion number'
+echo 'please pick the partition you want to be the home please only include the partition number'
 read -r home
-echo 'please pick the parttion you want to be the swap please only include the parttion number'
+echo 'please pick the partition you want to be the swap please only include the partition number'
 read -r swap
 
 mkfs.ext4 /dev/sda"$root"
@@ -42,7 +51,6 @@ mkfs.ext4 /dev/sda"$home"
 mkswap /dev/sda"$swap"
 swapon /dev/sda"$swap"
 
-echo 'Mounting the parttions'
 mount /dev/sda"$root" /mnt
 mkdir /mnt/home
 mount /dev/sda"$home" /mnt/home
@@ -92,95 +100,28 @@ genfstab -U /mnt > /mnt/etc/fstab
 echo 'Setup your root password'
 arch-chroot /mnt passwd
 
-while true; do
-    echo 'please enter your username'
-    read -r username
-    echo "$username"
-    read -p 'Is your username right (y/n)' yn
-    
-    case $yn in
-        [yY])
-            arch-chroot /mnt useradd -m "$username"
-            break
-        ;;
-        [nN])
-            echo 'Please redo your username'
-            clear
-            continue
-        ;;
-        *) echo 'invalid respone please try again!' ;;
-    esac
-done
-
+arch-chroot /mnt useradd -m "$username"
 arch-chroot /mnt passwd "$username"
 arch-chroot /mnt usermod -aG wheel,storage,power "$username"
+arch-chroot /mnt EDITOR=nano visudo
 
-arch-chroot /mnt sudo nano visudo
+clear
 
 arch-chroot /mnt nano /etc/locale.gen
 arch-chroot /mnt locale-gen
 
-while true; do
-    echo 'Please enter the lang you use'
-    read -r lang
-    echo "$lang"
-    read -p 'Is your lang right (y/n)' yn
-    case $yn in
-        [yY])
-            arch-chroot /mnt echo LANG="$lang" > /etc/locale.conf
-            export LANG="$lang"
-            break
-        ;;
-        [nN])
-            echo 'please redo your lang'
-            clear
-            continue
-        ;;
-        *) echo 'invalid respone please try again!' ;;
-    esac
-done
+echo 'Enter the language you just uncommitted'
+read -r lang
 
-while true; do
-    echo 'Please enter your hostname'
-    read -r hostname
-    echo "$hostname"
-    read -p 'Is your hostname right (y/n)' yn
-    case $yn in
-        [yY])
-            arch-chroot /mnt echo "$hostname" > /etc/hostname
-            break
-        ;;
-        [nN])
-            echo 'please redo your hostname'
-            continue
-        ;;
-        *) echo 'invalid respone please try again!' ;;
-    esac
-done
+arch-chroot /mnt echo LANG="$lang" > /etc/locale.conf
+arch-chroot /mnt export LANG="$lang"
 
-arch-chroot /mnt touch /etc/hosts
-arch-chroot /mnt echo '127.0.0.1   localhost
-::1         localhost
-127.0.1.1   '"$hostname"'.localdomain localhost' > /etc/hosts
+arch-chroot /mnt echo "$hostname" you want > /etc/hostname
+arch-chroot /mnt echo '127.0.0.1 localhost
+::1 localhost
+127.0.1.1 '$hostname'.localdomain localhost' > /etc/hosts
 
-while true; do
-    echo 'please enter your timezone example Europe/London'
-    read -r timezone
-    echo "$timezone"
-    read -p 'Is your timezone right (y/n)' yn
-    case $yn in
-        [yY])
-            arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$localtime" /etc/localtime
-            break
-        ;;
-        [nN])
-            echo 'Please redo your timezone'
-            clear
-            continue
-        ;;
-        *) echo 'invalid respone please try again!' ;;
-    esac
-done
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$localtime" /etc/localtime
 
 arch-chroot /mnt mkdir /boot/efi
 arch-chroot /mnt mount /dev/sda1 /boot/efi/
@@ -189,27 +130,10 @@ arch-chroot /mnt nano /etc/default/grub
 arch-chroot /mnt pacman -S os-prober
 arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg -home /boot/grub/grub.cfg
+arch-chroot /mnt systemctl enable dhcpcd.service
+arch-chroot /mnt systemctl enable NetworkManager.service
 
-arch-chroot /mnt systemctl enable dhcpcd
-arch-chroot /mnt systemctl enable NetworkManager
-clear
-echo 'You made it the install is now done have fun with archlinux'
-
-curl -LO https://raw.githubusercontent.com/swayz8148/Arch-Swayz/main/apps.sh /mnt/home/"$username"/apps
-
-while true; do
-    read -p 'would you like to unmount and reboot now? (y/n)' yn
-    case $yn in
-        [yY])
-            echo 'Unmounting..'
-            umount -lR /mnt
-            echo 'Rebooting..'
-            sleep 3s
-            reboot
-        ;;
-        [nN])
-            echo 'Ok exiting the script'
-            exit
-        ;;
-    esac
-done
+echo 'Rebooting...'
+sleep 2s
+umount -lR /mnt
+reboot
