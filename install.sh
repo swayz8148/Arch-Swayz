@@ -1,17 +1,19 @@
 #!/bin/sh
 while true; do
-    read -p 'Welcome to my archlinux installer would you like to continue with the install' yn
+    read -p 'Welcome to my archlinux installer would you like to continue with the install (y/n)' yn
     
     case $yn in
         [yY])
             echo 'Starting now'
             sleep 3s
             clear
+            break
         ;;
         [nN])
             echo 'Leaving now'
             sleep 1s
             clear
+            break
         ;;
     esac
 done
