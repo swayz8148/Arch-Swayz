@@ -18,14 +18,14 @@ while true; do
     esac
 done
 
-echo '
+echo "
 .--.
 |__| .---------.
 |=.| |.-------.|
 |--| || Swayz ||
 |  | |'-------'|
 |__|~')_______('
-'
+"
 
 echo 'This install is for windows dual boot if you are not dual booting this may not work'
 
@@ -39,7 +39,7 @@ read -r hostname
 
 loadkeys "$keymap"
 
-cfdisk && echo 'please setup your partitions'
+cfdisk
 
 echo 'please pick the partition you want to be the root please only include the partition number'
 read -r root
@@ -96,9 +96,7 @@ while true; do
     esac
 done
 clear
-
 genfstab -U /mnt > /mnt/etc/fstab
-
 echo 'Setup your root password'
 arch-chroot /mnt passwd
 
@@ -118,11 +116,11 @@ read -r lang
 arch-chroot /mnt echo LANG="$lang" > /etc/locale.conf
 arch-chroot /mnt export LANG="$lang"
 
-arch-chroot /mnt echo "$hostname" you want > /etc/hostname
-arch-chroot /mnt echo '127.0.0.1 localhost
-::1 localhost
-127.0.1.1 '$hostname'.localdomain localhost' > /etc/hosts
+echo 'Please enter your hostname'
+echo "$hostname" > /etc/hostname
 
+echo 'please enter your timezone e.g. Europe/London'
+read -r localtime
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$localtime" /etc/localtime
 
 arch-chroot /mnt mkdir /boot/efi
