@@ -1,4 +1,5 @@
 #!/bin/sh
+clear
 while true; do
     read -p 'Welcome to my archlinux installer would you like to continue with the install (y/n)' yn
     
