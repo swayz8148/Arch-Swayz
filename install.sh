@@ -119,9 +119,7 @@ arch-chroot /mnt export LANG="$lang"
 echo 'Please enter your hostname'
 echo "$hostname" > /etc/hostname
 
-echo 'please enter your timezone e.g. Europe/London'
-read -r localtime
-arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$localtime" /etc/localtime
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime
 
 arch-chroot /mnt mkdir /boot/efi
 arch-chroot /mnt mount /dev/sda1 /boot/efi/
@@ -129,9 +127,9 @@ arch-chroot /mnt pacman -S grub efibootmgr dosfstools mtools
 arch-chroot /mnt nano /etc/default/grub
 arch-chroot /mnt pacman -S os-prober
 arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg -home /boot/grub/grub.cfg
-arch-chroot /mnt systemctl enable dhcpcd.service
-arch-chroot /mnt systemctl enable NetworkManager.service
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+arch-chroot /mnt systemctl enable dhcpcd
+arch-chroot /mnt systemctl enable NetworkManager
 
 echo 'Rebooting...'
 sleep 2s
