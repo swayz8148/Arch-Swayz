@@ -1,1 +1,1 @@
-# Right now the script is broken please hold off from using it I am trying to fix everything thank you
+# Working please let me know if you find any bugs
