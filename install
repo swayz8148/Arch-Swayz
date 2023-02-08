@@ -1,0 +1,100 @@
+#!/usr/bin/env bash
+
+while true; do
+    read -rp 'This script will install arch do you want to continue' yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) printf "Error: please type a N or Y";;
+    esac
+done
+clear
+
+printf "Please enter your timezone e.g. Eruope/London"
+read -r timezone
+printf "please enter your keyboard layout (get from the archlinux wiki if needed)"
+read -r layout
+printf "Please enter your username for the install"
+read -r username
+printf "please enter your hostname for the install"
+read -r hostname
+
+timedatectl set-timezone "$timezone"
+timedatectl set-ntp true
+loadkeys "$layout"
+
+clear
+
+cfdisk /dev/sda
+
+
+printf "Please put the partiton number you used for root"
+read -r partiton1
+printf "Please put the partiton number you used for home"
+read -r partiton2
+printf "Please put the partiton number you used for swap"
+read -r partiton3
+
+mkfs.ext4 /dev/sda"$partiton1"
+mkfs.ext4 /dev/sda"$partiton2"
+mkswap /dev/sda"$partiton3"
+swapon /dev/sda"$partiton3"
+
+while true; do
+    read -rp 'Would you like to setup the fastest mirrors' yn
+    case $yn in
+        [Yy]* ) 
+        cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak
+        pacman -Syy pacman-contrib
+        rankmirrors -n 10 /etc/pacman.d/mirrorlist.bak > /etc/pacman.d/mirrorlist
+        break;;
+        [Nn]* ) break;;
+        * ) printf "Error: please type a N or Y";;
+    esac
+done
+
+while true; do
+    read -rp 'Would you like to install vim and neofetch with your base install' yn
+    case $yn in
+        [Yy]* ) 
+        pacstrap -i /mnt base base-devel linux intel-ucode sudo nano vim neofetch networkmanager dhcpcd pipewire
+        break;;
+        [Nn]* ) 
+        pacstrap -i /mnt base base-devel linux intel-ucode sudo nano networkmanager dhcpcd pipewire
+        break;;
+        * ) printf "Error: please type a N or Y";;
+    esac
+done
+
+genfstab -U /mnt > /mnt/etc/fstab
+
+arch-chroot /mnt passwd
+arch-chroot /mnt useradd -m "$username"
+arch-chroot /mnt passwd "$username"
+arch-chroot /mnt usermod -aG wheel,storage,power "$username"
+arch-chroot /mnt EDITOR=nano visudo
+arch-chroot /mnt nano /etc/locale.gen
+arch-chroot /mnt locale-gen
+
+printf "Please enter the language you uncommited e.g. en_GB.UTF-8"
+read -r Lang
+arch-chroot /mnt echo LANG="$Lang" > /etc/locale.conf
+arch-chroot /mnt export LANG="$Lang"
+
+arch-chroot /mnt echo "$hostname" > /etc/hostname/
+arch-chroot /mnt nano /etc/hosts
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/"$timezone" /etc/loacltime
+
+arch-chroot /mnt mkdir /boot/efi
+arch-chroot /mnt mount /dev/sda1 /boot/efi
+arch-chroot /mnt pacman -S grub efibootmgr dosfstools mtools
+arch-chroot /mnt nano /etc/default/grub
+arch-chroot /mnt pacman -S os-prober
+arch-chroot /mnt grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg -home /boot/grub/grub.cfg
+arch-chroot /mnt systemctl enable dhcpcd
+arch-chroot /mnt systemctl enable NetworkManager
+
+printf "Rebooting and unmounting have fun with your new install"
+umount -lR /mnt
+reboot
