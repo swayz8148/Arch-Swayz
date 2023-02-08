@@ -10,13 +10,13 @@ while true; do
 done
 clear
 
-printf "Please enter your timezone e.g. Eruope/London"
+printf "Please enter your timezone e.g. Eruope/London\n\n"
 read -r timezone
 printf "please enter your keyboard layout (get from the archlinux wiki if needed)"
 read -r layout
-printf "Please enter your username for the install"
+printf "Please enter your username for the install\n\n"
 read -r username
-printf "please enter your hostname for the install"
+printf "please enter your hostname for the install\n\n"
 read -r hostname
 
 timedatectl set-timezone "$timezone"
@@ -27,18 +27,10 @@ clear
 
 cfdisk /dev/sda
 
-
-printf "Please put the partiton number you used for root"
-read -r partiton1
-printf "Please put the partiton number you used for home"
-read -r partiton2
-printf "Please put the partiton number you used for swap"
-read -r partiton3
-
-mkfs.ext4 /dev/sda"$partiton1"
-mkfs.ext4 /dev/sda"$partiton2"
-mkswap /dev/sda"$partiton3"
-swapon /dev/sda"$partiton3"
+mkfs.ext4 /dev/sda1
+mkfs.ext4 /dev/sda2
+mkswap /dev/sda3
+swapon /dev/sda3
 
 while true; do
     read -rp 'Would you like to setup the fastest mirrors' yn
