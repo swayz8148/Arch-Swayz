@@ -32,7 +32,7 @@ mkfs.ext4 /dev/sda2
 mkswap /dev/sda3
 swapon /dev/sda3
 
-mount /dev/sda1
+mount /dev/sda1 /mnt
 mkdir /mnt/home
 mount /dev/sda2 /mnt/home
 
