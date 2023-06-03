@@ -19,6 +19,12 @@ read -r username
 printf "please enter your hostname for the install\n\n"
 read -r hostname
 
+## TODO:
+## check if timezone is right
+## check if keyboard layout is right
+## confirm username
+## confirm password
+
 timedatectl set-timezone "$timezone"
 timedatectl set-ntp true
 loadkeys "$layout"
